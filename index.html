@@ -4,6 +4,7 @@
 <meta http-equiv="Content-Type" content="text/html; charset=UTF-8"> 
 <title>ImageManager test</title>
 	<script src="imanager.js" type="text/javascript"></script>
+    <script src="timer.js" type="text/javascript"></script>
 </head>
 <body onload = "OnLoad()">
 	<canvas id="content" width="500" height="500"></canvas>
@@ -11,30 +12,59 @@
 <script>
 	function OnLoad()
 	{
+        var dx = 5;
+        var dy = 5;
+        var x = 150;
+        var y = 100;
+        var HEIGHT = 500;
+        var WIDTH = 500;
+        var mouseX = 0;
+        var mouseY = 0;
 
-		// Test
-		var canvas = document.getElementById("content");	
+
+        window.addEventListener('keydown',doKeyDown,true);
+
+		var canvas = document.getElementById("content");
+        canvas.onmousemove = mouseMove;
 		var ctx = canvas.getContext('2d');
 
-		var load_list = ["http://queen.bear.com.ua/albums/lj/Romantic_dinner_setting_lres.jpg",
-					   "http://www.pafilia.org/wp-content/uploads/2010/02/couple-photo-LR.jpg",
-					   "http://www.portwallpaper.com/imgwal/romantic-vista.jpg"];
-					   
-		var loader = ImageManager(load_list, on_done, on_progress);
+		var load_list = ["r/ball.png"];
+		var loader = ImageManager(load_list, null, on_progress);
 
+        var frame_timer = new FrameTimer();
+        frame_timer.tick();
 
-		function on_done(list)
-		{
-			alert ("Total loaded: " + list.length);
-		}
+        function mouseMove(event) {
+                x = event.clientX - canvas.offsetLeft;
+                y = event.clientY - canvas.offsetTop;
+            }
 
+        function doKeyDown(evt) {
+            switch (evt.keyCode) {
+                case 37:  /* Left arrow was pressed */
+                    if (x - dx > 0) {
+                        x -= dx;
+                    }
+                    break;
+                case 39:  /* Right arrow was pressed */
+                    if (x + dx < WIDTH) {
+                        x += dx;
+                    }
+                    break;
+            }
+        }
 
 		function on_progress(current, total, image)
 		{
-			ctx.drawImage(image,current*20,current*20);
+            var interval = 1    ;
+			setInterval(function(){
+                    ctx.clearRect(0, 0, 500, 500);
+                    ctx.drawImage(image, x, 400);
+                    interval = frame_timer.getSeconds();
+                    frame_timer.tick();
+                }, 5);
 		}	
 	}
 </script>
-
 </body>
 </html>

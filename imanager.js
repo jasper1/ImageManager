@@ -1,4 +1,4 @@
-// Autor: Konstantin Shishkin aka jasper
+// Author: Konstantin Shishkin aka jasper
 // Email: 288825@gmail.com
 // ImageManager class
 function ImageManager(url_list, callback, progess_callback)
